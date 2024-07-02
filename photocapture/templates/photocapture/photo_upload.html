@@ -14,7 +14,6 @@
     <form method="post" enctype="multipart/form-data" id="photo-form">
         {% csrf_token %}
         <input type="hidden" name="image" id="image-data">
-        {% comment %} {{ form.as_p }} {% endcomment %}
         <br>
         <button type="submit">Upload Photo</button>
     </form>
