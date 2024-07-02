@@ -1,0 +1,22 @@
+<!-- templates/webcam/photos.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uploaded Photos</title>
+</head>
+<body>
+    <h1>Uploaded Photos</h1>
+    
+    <ul>
+        {% for photo in photos %}
+        <li>
+            <img src="{{ photo.image.url }}" alt="Photo {{ photo.id }}">
+            <p>Uploaded at: {{ photo.uploaded_at }}</p>
+        </li>
+        {% empty %}
+        <li>No photos uploaded yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

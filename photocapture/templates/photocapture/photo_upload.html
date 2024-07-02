@@ -1,0 +1,63 @@
+<!-- templates/photocapture/photo_upload.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Upload</title>
+</head>
+<body>
+    <h2>Webcam Photo Capture</h2>
+    <video id="video" width="640" height="480" autoplay></video><br>
+    <button id="capture-button">Capture Photo</button>
+    <form method="post" enctype="multipart/form-data" id="photo-form">
+        {% csrf_token %}
+        <input type="hidden" name="image" id="image-data">
+        {% comment %} {{ form.as_p }} {% endcomment %}
+        <br>
+        <button type="submit">Upload Photo</button>
+    </form>
+
+    {% if form.errors %}
+    <ul class="errorlist">
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        <li>{{ field|title }}: {{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('capture-button');
+        const imageDataInput = document.getElementById('image-data');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing webcam:', error);
+                alert('Error accessing webcam. Please check permissions or try again later.');
+            });
+
+        captureButton.addEventListener('click', function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageData = canvas.toDataURL('image/jpeg');
+            imageDataInput.value = imageData;
+
+            const img = document.createElement('img');
+            img.src = imageData;
+            document.body.appendChild(img);  // Optional: Display captured photo
+        });
+    });
+    </script>
+</body>
+</html>
